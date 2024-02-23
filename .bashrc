@@ -9,11 +9,29 @@
 set -o vi
 
 # keybinds
-bind -x '"\C-l":clear'
+bind -x '"\C-l":clear' # old habit (it's better to use `c` alias)
+
+# bash-completion similar to zsh
+bind 'set show-all-if-ambiguous on'
+bind 'TAB:menu-complete'
+
 # ~~~~~~~~~~~~~~~ Environment Variables ~~~~~~~~~~~~~~~~~~~~~~~~
 
+export MSYS=winsymlinks:nativestrict # Cygwin creates symlinks as native Windows symlinks on filesystems and OS versions supporting them.
+alias rg="rg --path-separator //"
+alias fd="fd --path-separator //"
+
+# npm and corepack enable
+alias pn=pnpm
+
 # config
-export BROWSER="firefox"
+
+export XDG_DATA_HOME="${XDG_DATA_HOME:-"$HOME/.local/share"}"
+export NVIM_APPNAME=lazyvim240309
+export NVIM_SILENT= # NVIM_SILENT= (nil in neovim)
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-"$TEMP"}"
+
+export BROWSER="vivaldi"
 
 # directories
 export REPOS="$HOME/Repos"
@@ -26,11 +44,7 @@ export SECOND_BRAIN="$HOME/garden"
 # Go related. In general all executables and scripts go in .local/bin
 export GOBIN="$HOME/.local/bin"
 export GOPRIVATE="github.com/$GITUSER/*,gitlab.com/$GITUSER/*"
-# export GOPATH="$HOME/.local/share/go"
 export GOPATH="$HOME/go/"
-
-# dotnet
-export DOTNET_ROOT="/opt/homebrew/opt/dotnet/libexec"
 
 # ~~~~~~~~~~~~~~~ Path configuration ~~~~~~~~~~~~~~~~~~~~~~~~
 # function from Arch Wiki, to prevent adding directories multiple times
@@ -54,6 +68,17 @@ set_path() {
 
 set_path "$HOME"/.local/bin
 
+# cargo
+set_path $(cygpath -u $USERPROFILE)/.cargo/bin
+
+# dotnet
+export DOTNET_CLI_TELEMETRY_OPTOUT=1
+export DOTNET_ROOT=/usr/share/dotnet
+export DOTNET_INSTALL_DIR=$DOTNET_ROOT
+set_path $(cygpath -u $DOTNET_ROOT)
+set_path $(cygpath -u $DOTNET_ROOT/tools)
+alias dotnet_tool_list='dotnet tool list --tool-path $DOTNET_ROOT/tools'
+
 # https://unix.stackexchange.com/questions/26047/how-to-correctly-add-a-path-to-path
 # PATH="${PATH:+${PATH}:}~/opt/bin"   # appending
 # PATH="~/opt/bin${PATH:+:${PATH}}"   # prepending
@@ -64,11 +89,11 @@ PATH="${PATH:+${PATH}:}"$(cygpath -u $USERPROFILE/scoop/shims) # appending
 PATH="${PATH:+${PATH}:}"/c/WINDOWS/system32 # appending
 
 # ~~~~~~~~~~~~~~~ History ~~~~~~~~~~~~~~~~~~~~~~~~
-
 export HISTFILE=~/.histfile
 export HISTSIZE=25000
 export SAVEHIST=25000
-export HISTCONTROL=ignorespace
+# Don't put duplicate lines in the history
+export HISTCONTROL=ignoredups:ignorespace
 
 # ~~~~~~~~~~~~~~~ Functions ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -105,12 +130,10 @@ export GIT_PS1_SHOWCOLORHINTS=1
 export GIT_PS1_DESCRIBE_STYLE="branch"
 export GIT_PS1_SHOWUPSTREAM="auto git"
 
-if [[ -f "$XDG_CONFIG_HOME/bash/gitprompt.sh" ]]; then
-	source "$XDG_CONFIG_HOME/bash/gitprompt.sh"
-fi
-
 # colorized prompt
-PROMPT_COMMAND='__git_ps1 "\[\e[33m\]\u\[\e[0m\]@\[\e[34m\]\h\[\e[0m\]:\[\e[35m\]\W\[\e[0m\]" " \n$ "'
+[ -f "$XDG_CONFIG_HOME/bash/gitprompt.sh" ] &&
+	source "$XDG_CONFIG_HOME/bash/gitprompt.sh" &&
+	export PROMPT_COMMAND=$PROMPT_COMMAND';__git_ps1 "\[\e[33m\]\u\[\e[0m\]@\[\e[34m\]\h\[\e[0m\]:\[\e[35m\]\W\[\e[0m\]" " \n$ "'
 
 # ~~~~~~~~~~~~~~~ Aliases ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -153,13 +176,15 @@ alias sb="cd \$SECOND_BRAIN"
 alias in="cd \$SECOND_BRAIN/0-inbox/"
 alias vbn='python ~/git/python/brainfile.py'
 
-# env variables
-export VISUAL=nvim
-export EDITOR=nvim
+# edit env variables
+export VISUAL="nvim --cmd 'let g:NVIM_SILENT=1'"
+export EDITOR=$VISUAL
 
 # fzf aliases
 # use fp to do a fzf search and preview the files
-alias fp="fzf --preview 'bat --style=numbers --color=always --line-range :500 {}'"
+export FZF_DEFAULT_COMMAND='fd --path-separator // --type file --strip-cwd-prefix --hidden --follow --exclude .git'
+# alias fp='fd --type file | fzf --preview "bat --style=numbers --color=always --line-range :500 {}"' # fd has path-separator
+alias fp='fzf --preview "bat --style=numbers --color=always --line-range :500 {}"' # fd has path-separator
 # search for a file with fzf and open it in vim
 alias vf='v $(fp)'
 
