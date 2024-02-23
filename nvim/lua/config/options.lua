@@ -48,3 +48,16 @@ opt.linebreak = true
 -- opt.vim_markdown_conceal = 0
 --
 vim.g.mkdp_browser = "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge"
+
+-- LF not CRLF
+vim.opt.fileformats = "unix,dos"
+
+vim.opt.clipboard = "unnamedplus" -- Sync with system clipboard
+
+if vim.g.neovide then
+  vim.keymap.set({ "n", "v" }, "<C-=>", ":lua vim.g.neovide_scale_factor = vim.g.neovide_scale_factor + 0.1<CR>")
+  vim.keymap.set({ "n", "v" }, "<C-->", ":lua vim.g.neovide_scale_factor = vim.g.neovide_scale_factor - 0.1<CR>")
+  vim.keymap.set({ "n", "v" }, "<C-0>", ":lua vim.g.neovide_scale_factor = 1<CR>")
+  vim.keymap.set({ "i", "c" }, "<S-Insert>", "<C-R>+")
+  vim.opt.guifont = "JetBrainsMono Nerd Font Mono:h12"
+end
