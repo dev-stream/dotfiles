@@ -165,11 +165,13 @@ alias gs='git status'
 alias lg='lazygit'
 
 # ricing
-alias eb='v ~/.bashrc'
-alias ev='cd ~/.config/nvim/ && v init.lua'
-# alias sz='source ~/.zshrc'
-alias sbr='source ~/.bashrc'
-# alias s='startx'
+alias eb='dot && v ~/.bashrc'
+alias ev='cd $XDG_CONFIG_HOME/$NVIM_APPNAME && v'
+alias sbr='echo "BASH_LAST_DIR=$PWD" >~/.bash_lastdir && dot && ./setup && exec bash --login -i'
+if [[ -f ~/.bash_lastdir ]]; then
+	source ~/.bash_lastdir
+	cd $BASH_LAST_DIR
+fi
 
 # vim & second brain
 alias sb="cd \$SECOND_BRAIN"

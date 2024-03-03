@@ -15,6 +15,7 @@ curl -o "$XDG_CONFIG_HOME"/bash/git-prompt.sh https://raw.githubusercontent.com/
 ln -sf "$PWD/.bash_profile" "$HOME"/.bash_profile
 ln -sf "$PWD/.bashrc" "$HOME"/.bashrc
 ln -sf "$PWD/.inputrc" "$HOME"/.inputrc
+ln -sf "$PWD/.bash_logout" "$HOME"/.bash_logout
 ln -sf "$PWD/nvim" "$XDG_CONFIG_HOME"/nvim
 
 # set up blog
