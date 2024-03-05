@@ -18,11 +18,6 @@ bind 'TAB:menu-complete'
 # ~~~~~~~~~~~~~~~ Environment Variables ~~~~~~~~~~~~~~~~~~~~~~~~
 
 export MSYS=winsymlinks:nativestrict # Cygwin creates symlinks as native Windows symlinks on filesystems and OS versions supporting them.
-alias rg="rg --path-separator //"
-alias fd="fd --path-separator //"
-
-# npm and corepack enable
-alias pn=pnpm
 
 # config
 
@@ -184,9 +179,17 @@ export EDITOR=$VISUAL
 
 # fzf aliases
 # use fp to do a fzf search and preview the files
+
+# Taken from tokyonight.nvim/lua/tokyonight/extra/fzf.lua
+export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
+  --color=fg:#c0caf5,bg:#1a1b26,hl:#ff9e64
+  --color=fg+:#c0caf5,bg+:#292e42,hl+:#ff9e64
+  --color=info:#7aa2f7,prompt:#7dcfff,pointer:#7dcfff
+  --color=marker:#9ece6a,spinner:#9ece6a,header:#9ece6a'
+
 export FZF_DEFAULT_COMMAND='fd --path-separator // --type file --strip-cwd-prefix --hidden --follow --exclude .git'
-# alias fp='fd --type file | fzf --preview "bat --style=numbers --color=always --line-range :500 {}"' # fd has path-separator
 alias fp='fzf --preview "bat --style=numbers --color=always --line-range :500 {}"' # fd has path-separator
+
 # search for a file with fzf and open it in vim
 alias vf='v $(fp)'
 
@@ -196,14 +199,4 @@ alias vr='rfv'
 # sourcing
 # source "$HOME/.privaterc"
 
-if [[ "$OSTYPE" == "darwin"* ]]; then
-	source "$HOME/.fzf.bash"
-	echo "I'm on Mac!"
-
-	# brew bash completion
-	[[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] && . "/opt/homebrew/etc/profile.d/bash_completion.sh"
-else
-	#	source /usr/share/fzf/key-bindings.bash
-	#	source /usr/share/fzf/completion.bash
-	[ -f ~/.fzf.bash ] && source ~/.fzf.bash
-fi
+[ -f "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.bash ] && source "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.bash
