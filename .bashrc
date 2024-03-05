@@ -190,6 +190,9 @@ alias fp='fzf --preview "bat --style=numbers --color=always --line-range :500 {}
 # search for a file with fzf and open it in vim
 alias vf='v $(fp)'
 
+# grep with rg and open it in vim
+alias vr='rfv'
+
 # sourcing
 # source "$HOME/.privaterc"
 
