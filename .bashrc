@@ -84,11 +84,14 @@ PATH="${PATH:+${PATH}:}"$(cygpath -u $USERPROFILE/scoop/shims) # appending
 PATH="${PATH:+${PATH}:}"/c/WINDOWS/system32 # appending
 
 # ~~~~~~~~~~~~~~~ History ~~~~~~~~~~~~~~~~~~~~~~~~
+# TODO write code in your favorite language to sanitise the history
 export HISTFILE=~/.histfile
 export HISTSIZE=25000
 export SAVEHIST=25000
 # Don't put duplicate lines in the history
-export HISTCONTROL=ignoredups:ignorespace
+export HISTCONTROL=ignoredups:erasedups:ignorespace
+# Don't add mistyped commands to the history
+export PROMPT_COMMAND='LAST_COMMAND_EXIT=$? && history -a && test 127 -eq $LAST_COMMAND_EXIT && head -n -2 $HISTFILE >${HISTFILE}_temp && mv ${HISTFILE}_temp $HISTFILE'
 
 # ~~~~~~~~~~~~~~~ Functions ~~~~~~~~~~~~~~~~~~~~~~~~
 
