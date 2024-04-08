@@ -17,6 +17,7 @@ bind 'TAB:menu-complete'
 
 # ~~~~~~~~~~~~~~~ Environment Variables ~~~~~~~~~~~~~~~~~~~~~~~~
 
+# Cygwin / MSYS2
 export MSYS=winsymlinks:nativestrict # Cygwin creates symlinks as native Windows symlinks on filesystems and OS versions supporting them.
 
 # config
@@ -162,6 +163,19 @@ alias gp='git pull'
 alias gs='git status'
 alias lg='lazygit'
 
+# zoxide
+if [[ -f /ucrt64/bin/zoxide ]]; then
+	eval "$(zoxide init bash)"
+	export _ZO_ECHO=              # When set to 1, z will print the matched directory before navigating to it.
+	export _ZO_RESOLVE_SYMLINKS=1 # When set to 1, z will resolve symlinks before adding directories to the database.
+
+	# pwd based on the value of _ZO_RESOLVE_SYMLINKS.
+	function __zoxide_pwd() {
+		# shorter path for Cygwin / MSYS2
+		\command realpath "$(\builtin pwd -P)" | sed "s~$(realpath /home)~/home~"
+	}
+fi
+
 # ricing
 alias eb='dot && v ~/.bashrc'
 alias ev='cd $XDG_CONFIG_HOME/$NVIM_APPNAME && v'
@@ -180,9 +194,6 @@ alias vbn='python ~/git/python/brainfile.py'
 export VISUAL="nvim --cmd 'let g:NVIM_SILENT=1'"
 export EDITOR=$VISUAL
 
-# fzf aliases
-# use fp to do a fzf search and preview the files
-
 # Taken from tokyonight.nvim/lua/tokyonight/extra/fzf.lua
 export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
   --color=fg:#c0caf5,bg:#1a1b26,hl:#ff9e64
@@ -191,11 +202,12 @@ export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
   --color=marker:#9ece6a,spinner:#9ece6a,header:#9ece6a'
 
 export FZF_DEFAULT_COMMAND='fd --path-separator // --type file --strip-cwd-prefix --hidden --follow --exclude .git'
-alias fp='fzf --preview "bat --style=numbers --color=always --line-range :500 {}"' # fd has path-separator
 
+# fzf aliases
+# use fp to do a fzf search and preview the files
+alias fp='fzf --preview "bat --style=numbers --color=always --line-range :500 {}"' # fd has path-separator
 # search for a file with fzf and open it in vim
 alias vf='v $(fp)'
-
 # grep with rg and open it in vim
 alias vr='rfv'
 
