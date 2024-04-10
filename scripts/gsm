@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# gsm - git status modified (recursively search for git repos)
+
+caller_path=$(cd "$(dirname "${BASH_SOURCE[1]}")" && realpath $PWD)
+
+fd --hidden -g '.git' --type d --no-ignore |
+	while read -r dir; do
+		work_dir=$dir/..
+		git_dir=$dir
+		git --work-tree=$work_dir --git-dir=$git_dir ls-files -m |
+			while read -r file; do
+				realpath $work_dir/$file |
+					sed "s~$caller_path/~~"
+			done
+	done
