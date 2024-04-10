@@ -75,6 +75,10 @@ set_path $(cygpath -u $DOTNET_ROOT)
 set_path $(cygpath -u $DOTNET_ROOT/tools)
 alias dotnet_tool_list='dotnet tool list --tool-path $DOTNET_ROOT/tools'
 
+# nodejs
+set_path $(cygpath -u $USERPROFILE/scoop/apps/nodejs/current)
+set_path $(cygpath -u $USERPROFILE/scoop/apps/nodejs/current/bin)
+
 # https://unix.stackexchange.com/questions/26047/how-to-correctly-add-a-path-to-path
 # PATH="${PATH:+${PATH}:}~/opt/bin"   # appending
 # PATH="~/opt/bin${PATH:+:${PATH}}"   # prepending
