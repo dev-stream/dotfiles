@@ -155,6 +155,13 @@ alias ll='ls -la'
 # alias la='exa -laghm@ --all --icons --git --color=always'
 alias la='ls -lathr'
 
+# default --path-separator
+alias rg="rg --path-separator //"
+alias fd="fd --path-separator //"
+
+# npm and corepack enable
+alias pn=pnpm
+
 # finds all files recursively and sorts by last modification, ignore hidden files
 alias last='find . -type f -not -path "*/\.*" -exec ls -lrt {} +'
 
